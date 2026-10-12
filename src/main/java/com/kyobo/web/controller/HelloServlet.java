@@ -24,7 +24,7 @@ public class HelloServlet extends HttpServlet {
             resp.getWriter().println("<br>");
 
             resp.getWriter().println("<p style='font-size: 17.5px'>");
-            resp.getWriter().println("안녕하세요, " + name + "님 </p1>");
+            resp.getWriter().println("안녕하세요, " + name + "님 </p>");
         }
     }
 
