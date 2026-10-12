@@ -1,6 +1,33 @@
+# IntelliJ (개인 설정, 노트북마다 다름)
 .idea/
-.gradle/
-.smarttomcat/
-build/
+*.iml
 out/
+
+# Gradle 캐시와 빌드 결과물
+.gradle/
+build/
 *.war
+*.class
+
+# Smart Tomcat이 만드는 실행용 폴더
+.smarttomcat/
+conf/
+logs/
+work/
+temp/
+webapps/
+
+# 에이전트 작업 상태(자동 생성, 세션마다 바뀜)
+.omc/
+# Claude Code 개인 설정 (.claude/ 의 나머지는 올린다)
+.claude/settings.local.json
+
+# OS / 에디터
+.DS_Store
+Thumbs.db
+*.swp
+*.log
+
+# 비밀번호가 들어갈 수 있는 파일 (STEP 5 JDBC 대비)
+*.local.properties
+.env
