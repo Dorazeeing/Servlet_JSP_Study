@@ -1,0 +1,6 @@
+.idea/
+.gradle/
+.smarttomcat/
+build/
+out/
+*.war
