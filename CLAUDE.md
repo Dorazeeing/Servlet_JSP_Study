@@ -22,7 +22,9 @@ Windows 쪽 Claude의 메모리와 대화 기록은 넘어가지 않는다. **�
 | 삭제 전 확인 | 파일을 지우거나 크게 바꾸기 전에 **대상 목록을 먼저 보여 주고** 확인받는다 |
 | 북마크 | 사용자가 곁가지(심화)로 새면 현재 위치를 기록해 두고, 돌아오면 그 지점부터 재개한다 |
 | 진행 | 처음부터 다 만들지 않는다. 한 단계씩, 사용자가 "다음"이라고 할 때 넘어간다 |
-| 언어 | 한국어로 답한다 |
+| **커밋** | **학습자는 직접 커밋하지 않는다.** 이 저장소는 학습 기록이 목적이므로, 각 수정을 자세히 알고 있는 Claude가 커밋 이력을 남긴다 (13장) |
+| 확인 | 애매하거나 사용자의 결정이 필요한 부분은 AskUserQuestion으로 묻는다 |
+| 언어 | 한국어로 답한다 (커밋 메시지만 영어) |
 
 ---
 
@@ -50,6 +52,7 @@ Windows 쪽 Claude의 메모리와 대화 기록은 넘어가지 않는다. **�
 **리뷰할 때 비교 기준으로만 쓰고, 사용자에게 먼저 보여 주지 않는다.**
 통과본은 빈 값일 때 명세의 기본값 `"Servlet"` 대신 `<marquee>` 오류 문구를 출력한다. 사용자가 의도해서 바꾼 것이고 그대로 인정했다.
 `.claude/` 폴더는 Claude Code의 설정 폴더지만, 이 하위 폴더는 **보관용**일 뿐 자동으로 읽히지 않는다.
+같은 통과본이 git 태그 **`step1-first-pass`** 커밋에도 있다 (`git show step1-first-pass:src/main/java/com/kyobo/web/controller/HelloServlet.java`).
 
 ### 지금까지 확인한 사실
 - Tomcat 11.0.26에서 `req.setCharacterEncoding("UTF-8")`을 빼도 POST 한글이 깨지지 않았다 (charset 유무 두 경우 모두 실측). 그래도 환경에 의존하지 않으려고 줄은 유지한다
@@ -198,7 +201,7 @@ Windows 쪽 Claude의 메모리와 대화 기록은 넘어가지 않는다. **�
 | MacBook Air | 과정 폴더의 `06_servlet_jsp/study_project` 권장 (8장 1번) |
 
 - 원격: `origin` = `https://github.com/Dorazeeing/Servlet_JSP_Study.git`, 브랜치 `main`
-- **시작할 때 `git pull`, 끝낼 때 2장 북마크를 갱신하고 commit + push.** 한쪽에서 push하지 않고 다른 쪽에서 작업하면 충돌이 난다
+- **시작할 때 Claude가 `git pull`, 끝낼 때 Claude가 2장 북마크를 갱신하고 commit + push한다** (13장). 한쪽에서 push하지 않고 다른 쪽에서 작업하면 충돌이 난다
 - 충돌이 나기 쉬운 곳은 `CLAUDE.md`의 북마크다. 충돌하면 **더 최근 진행 상황**을 남긴다
 - `.gitattributes`가 줄바꿈을 저장소 안에서 LF로 통일한다. Windows IntelliJ가 CRLF로 저장해도 커밋할 때 LF로 바뀐다 (경고는 정상)
 - `.gitignore`는 IDE 설정, 빌드 산출물, Tomcat 실행 폴더(`conf/ logs/ work/ temp/ webapps/`), `.omc/`, `.claude/settings.local.json`, 비밀값 파일을 제외한다
@@ -227,3 +230,52 @@ Windows 쪽 Claude의 메모리와 대화 기록은 넘어가지 않는다. **�
 - 비밀번호를 커밋하지 않는다. STEP 5(JDBC)의 DB 비밀번호는 환경 변수나 `.gitignore`된 파일(`*.local.properties`, `.env`)로 뺀다
 - `.claude/settings.local.json`은 개인 설정이라 올리지 않는다
 - 과정 원본(지시서, 강사 코드, 강의 PDF)은 올리지 않는다
+
+---
+
+## 13. 커밋 규칙 — 학습 기록으로 남긴다
+
+이 저장소는 단순한 코드 저장소가 아니라 **AI 에이전트와 함께 공부한 과정의 기록**이다 (사용자의 포트폴리오).
+**학습자는 직접 커밋하지 않는다.** 각 수정을 자세히 알고 있는 Claude가 커밋한다.
+
+### 언제 커밋하나
+- 학습자가 코드를 바꾸고 Claude가 그것을 **읽거나 리뷰할 때마다** 그 상태를 커밋한다. 실수가 있는 상태도 커밋한다 (틀린 버전 → 리뷰 → 고친 버전이 그대로 보이게)
+- 작성 중이라 컴파일되지 않는 상태도 기록할 가치가 있으면 커밋하고 제목에 `(WIP)`를 붙인다
+- Claude가 문서·코드를 쓰면(미션, 노트, 지침서, 사용자가 요청한 코드) 그것도 따로 커밋한다
+- 한 커밋에는 한 가지 변화만 담는다. 학습자 변경과 Claude 변경을 섞지 않는다
+
+### 메시지 형식 (Conventional Commits, 영어)
+```
+<type>(<scope>): <summary in English, imperative, no period>
+
+<what changed and why, in English. For learner commits, include what the
+review found (mistakes, their cause) and how it was verified (build/run).>
+
+Written-by: learner
+Reviewed-by: Claude Code (AI agent)
+```
+- type: `feat` 새 기능 · `fix` 버그·실수 수정 · `style` 모양·서식 · `refactor` 동작 변화 없는 정리 · `docs` 문서 · `chore` 설정·준비 작업 · `build` 빌드 설정
+- scope: `step1`, `step2` … (해당 STEP), `js`, `css`, `docs` 등
+- 학습자가 쓴 코드: 트레일러 `Written-by: learner` (+ 리뷰가 있었으면 `Reviewed-by: Claude Code (AI agent)`)
+- Claude가 쓴 것: `Written-by: Claude Code (AI agent)` (사용자 요청이면 `, at the learner's request`) + **`Co-authored-by: Claude <noreply@anthropic.com>`**
+
+### 작성자와 커밋한 사람
+| 역할 | 값 | 설정 방법 |
+|---|---|---|
+| author (작성자) | 학습자 계정 — 그 기기의 `git config user.name`/`user.email` | 기본값 그대로 |
+| committer (기록한 사람) | **`Claude <noreply@anthropic.com>`** | 커밋할 때 `GIT_COMMITTER_NAME="Claude" GIT_COMMITTER_EMAIL="noreply@anthropic.com" git commit ...` |
+
+GitHub에는 "학습자 authored and Claude committed"로 보인다. 잔디(기여 그래프)는 작성자 기준이라 학습자에게 잡힌다.
+
+### 태그
+STEP의 한 단계를 통과하면 그 커밋에 주석 태그를 단다. 예: `step1-first-pass` (STEP 1-2 첫 통과). 형식 `stepN-<설명>`.
+
+### push
+- 세션을 끝낼 때, 또는 사용자가 요청할 때 `git push origin main --follow-tags`
+- push 전에 `git pull --rebase`로 다른 기기의 커밋을 먼저 받는다
+- 공개 저장소이므로 push 전에 비밀번호·과정 원본이 섞이지 않았는지 `git diff --stat origin/main..` 으로 확인한다
+
+### 2026-10-12 이력에 대하여
+첫날(2026-10-12)의 커밋 30개는 그날 저녁 **세션 기록(대화 로그에 남은 파일 관측 내용)으로 재구성**했다.
+각 커밋 시각은 그 상태를 실제로 확인한 시각이다. 재구성한 모든 중간 상태는 세션 기록과 한 줄씩 대조해 일치를 확인했다.
+CSS 변경 커밋(`style(css)`)만은 관측 기록이 없어 파일의 마지막 수정 시각(14:58 KST)을 썼다.
