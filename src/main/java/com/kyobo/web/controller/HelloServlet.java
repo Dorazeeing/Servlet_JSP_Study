@@ -16,7 +16,7 @@ public class HelloServlet extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
         String name = req.getParameter("name");
         if(name == null || name.isBlank()) {
-            resp.getWriter().println("<h1>Hello, " + name + "</h1>");
+            resp.getWriter().println("잘못된 정보입니다.");
         }
     }
 
