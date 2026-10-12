@@ -18,12 +18,20 @@ public class HelloServlet extends HttpServlet {
         if(name == null || name.isBlank()) {
             resp.getWriter().println("잘못된 정보입니다.");
         }
+        else {
+            resp.getWriter().println("<h1>요청 정상</h1>");
+            resp.getWriter().println("<hr>");
+            resp.getWriter().println("<br>");
+
+            resp.getWriter().println("<p style='font-size: 17.5px'>");
+            resp.getWriter().println("안녕하세요, " + name + "님 </p1>");
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        super.doPost(req, resp);
-        resp.setContentType("text/html; charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
         this.doGet(req, resp);
     }
 }
