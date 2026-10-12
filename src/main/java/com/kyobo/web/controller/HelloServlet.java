@@ -16,7 +16,7 @@ public class HelloServlet extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
         String name = req.getParameter("name");
         if(name == null || name.isBlank()) {
-            String style = "font-size= 25px";
+            String style = "font-size: 25px";
             String brSet = "<br><br><br><br><br><br><br><br><br><br><br><br><br><br>";
             resp.getWriter().println(brSet +"<marquee style=\""+ style +"\">잘못된 정보입니다.<marquee>");
         }
