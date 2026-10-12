@@ -39,11 +39,13 @@ STEP 5는 **별도 프로젝트**에서 진행합니다. STEP 6부터는 다시 
 
 1. **File → Open**에서 `study_project` 폴더를 선택합니다. Gradle 프로젝트로 열립니다.
 2. Gradle 동기화가 끝날 때까지 기다립니다.
-3. **Run → Edit Configurations → + → Smart Tomcat**을 선택하고 아래처럼 설정합니다. 원본 실습과 같은 설정입니다.
-   - Tomcat server: `Apache Tomcat/11.0.26`
-   - Deployment directory: `study_project/src/main/webapp`
-   - Context path: `/`
-   - Server port: `8080`
+3. Tomcat 실행 구성을 만듭니다. 둘 중 하나를 씁니다.
+   - **IntelliJ Ultimate (Windows 실습 PC에서 쓴 방식)**: Run → Edit Configurations → + → **Tomcat Server → Local**
+     - Deployment 탭: + → Artifact → `Gradle : com.kyobo : study_project-1.0-SNAPSHOT.war (exploded)`
+     - Application context: `/`, HTTP port: `8080`
+   - **Community 버전**: Smart Tomcat 플러그인 → Tomcat server 지정, Deployment directory `src/main/webapp`, Context path `/`, Port `8080`
 4. 실행한 뒤 `http://localhost:8080/`를 엽니다.
+
+다른 기기(Mac 등)에서 처음 여는 방법과 문제 해결은 `CLAUDE.md`의 8~10장에 있습니다.
 
 **Java 코드를 바꾸면 서버를 재시작해야 합니다.** JSP는 저장만 해도 대부분 반영됩니다.
