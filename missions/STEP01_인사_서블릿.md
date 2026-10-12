@@ -54,7 +54,7 @@ src/main/webapp/index.html                                  ← 1-1, 1-3
 
 ## 필요한 함수
 
-**import할 클래스 (5개)** — 패키지만 알려 드립니다. 클래스 이름은 아래 표에서 찾으세요.
+**import할 클래스 (6개)** — 패키지만 알려 드립니다. 클래스 이름은 아래 표에서 찾으세요.
 
 | 패키지 | 개수 |
 |---|---|
@@ -63,7 +63,7 @@ src/main/webapp/index.html                                  ← 1-1, 1-3
 | `jakarta.servlet.http` | 3 |
 | `java.io` | 1 (예외) |
 
-> 합이 6입니다. `HelloServlet`처럼 `doGet`과 `doPost`가 모두 있으면 6개가 필요합니다. 원본은 import가 5개라고 적혀 있지만 실제로 세어 보세요.
+> 실습 지시서 6-3에는 "import 5개"라고 적혀 있지만, 원본 `HelloServlet.java`를 세어 보면 `java.io.IOException`까지 **6개**입니다. 지시서는 `jakarta` 쪽 5개만 센 것입니다.
 
 | 종류 | 이름 | 쓰임 |
 |---|---|---|
