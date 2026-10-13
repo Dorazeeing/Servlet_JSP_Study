@@ -13,10 +13,11 @@
         <hr>
         <br>
 
+        <h2>Step 1.</h2>
         <fieldset>
             <legend>신청자 정보(get)</legend>
             <form action="hello" method="get">
-                <label for="getName">이름: <input id="getName" name="name" style="width: 80%"></label>
+                <label for="getName">이름:&nbsp;&nbsp;<input id="getName" name="name"></label>
                 <button>GET 요청</button>
             </form>
         </fieldset>
@@ -25,10 +26,31 @@
         <fieldset>
             <legend>신청자 정보(post)</legend>
             <form action="hello" method="post">
-                <label for="postName">이름: <input id="postName" name="name" style="width: 80%"></label>
+                <label for="postName">이름:&nbsp;&nbsp;<input id="postName" name="name"></label>
                 <button>POST 요청</button>
             </form>
         </fieldset>
+
+        <br>
+        <br>
+        <h2>Step 2.</h2>
+        <fieldset id="spec">
+            <legend>신청자 상세 정보(get)</legend>
+            <form action="greet" method="get">
+                <label for="getSpecName">이름:&nbsp;&nbsp;<input id="getSpecName" name="name"></label>
+                <br>
+                <label for="getSpecEmail">메일:&nbsp;&nbsp;<input id="getSpecEmail" name="email"></label>
+                <button>GET 요청</button>
+            </form>
+        </fieldset>
+        <br>
+
+        <br>
+        <hr>
+        <footer>
+            <p>&copy; 2026 Dorazeeing</p>
+            <p>Contact: <a href="mailto:tkdwls0619@hufs.ac.kr">tkdwls0619@hufs.ac.kr</a></p>
+        </footer>
 
         <script src="assets/js/main.js"></script>
     </body>
