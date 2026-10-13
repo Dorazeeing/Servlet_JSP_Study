@@ -46,6 +46,4 @@ public class GreetServlet extends HttpServlet {
 				""", name, email);
 		}
 	}
-
-
 }
