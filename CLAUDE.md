@@ -14,7 +14,7 @@ Windows 쪽 Claude의 메모리와 대화 기록은 넘어가지 않는다. **�
 | 규칙 | 내용 |
 |---|---|
 | 미션 전달 | 사용자는 `missions/*.md`를 **직접 열지 않는다.** "뭐 해야 해?"라고 물으면 Claude가 문서를 읽고 **지금 할 작업 하나만** 채팅으로 자세히 안내한다. 파일 경로, 속성과 값, 필요한 함수를 표로 준다 |
-| **작업 순서** | 명세를 줄 때 **작업 순서를 먼저 정하고, 그 순서대로** 준다. 기준은 **무엇이 계약을 정하는가**다. 폼이 출발점인 STEP 1~3은 `index.html`(폼의 `name` 키가 계약) → 서블릿 순서이고, 데이터가 가장 안쪽인 STEP 4~5는 모델·DAO → 서블릿 → JSP 순서다. 명세에 번호(1️⃣ 2️⃣ …)를 매기고, 순서를 정한 이유를 한 줄 적는다. 미션 문서의 표 순서와 달라도 이 규칙이 우선한다 |
+| **작업 순서** | 명세를 줄 때 **작업 순서를 먼저 정하고, 그 순서대로** 준다. 기준은 **무엇이 계약을 정하는가**다. 폼이 출발점인 STEP 1~2는 폼(`name` 키가 계약) → 받는 쪽 순서이고, STEP 3은 도착지(`scope_view.jsp`, 읽을 속성 키를 정한다) → 이동 페이지 순서이며, 데이터가 가장 안쪽인 STEP 4 이후는 모델·DAO → 서블릿 → JSP 순서다. 명세에 번호(1️⃣ 2️⃣ …)를 매기고, 순서를 정한 이유를 한 줄 적는다. 미션 문서의 표 순서와 달라도 이 규칙이 우선한다 |
 | 정답 금지 | 완성 코드는 주지 않는다. 빈칸 뼈대와 힌트까지만 준다. "힌트"라고 하면 단서만 준다 |
 | 예외 | 사용자가 **"너가 해줘"라고 명시하면** 해 준다 (지금까지 `main.js` 작성, 글자 수정이 그랬다) |
 | 메서드 안내 | 복습 모드에서는 메서드·구성 요소를 **설명 없이 나열만** 한다. 사용자가 골라 쓴다 |
@@ -44,7 +44,7 @@ STEP 2 미션 문서는 `missions/STEP02_JSP_입력과_결과.md`. 작업 순서
 1. 사용자가 "뭐 해야 해?"라고 물으면 `missions/STEP02_...md`를 읽고 **2-1(`input.jsp`) 하나만** 안내한다
 2. `input.jsp`를 리뷰한 뒤 2-2(`result.jsp`). 요청하면 메서드는 나열만 한다
 3. 서버를 실행해 확인 표와 질문 5개, 그다음 심화 ①②③을 하나씩
-4. "STEP 2 끝"이면 STEP 3(세션 로그인) 미션 문서를 만든다 (6장)
+4. "STEP 2 끝"이면 STEP 3(session과 페이지 이동, `06_02` 4·7·8교시) 미션 문서를 만든다 (6장). 로드맵은 2026-10-13에 재설계했다 (3장)
 
 ### 통과본 (리뷰 비교 기준)
 `.claude/baseline/step01/`에 첫 시도에서 통과한 `HelloServlet.java.txt`, `index.html.txt`가 있다.
@@ -56,7 +56,7 @@ STEP 2 미션 문서는 `missions/STEP02_JSP_입력과_결과.md`. 작업 순서
 ### 지금까지 확인한 사실
 - Tomcat 11.0.26에서 `req.setCharacterEncoding("UTF-8")`을 빼도 POST 한글이 깨지지 않았다 (charset 유무 두 경우 모두 실측). 그래도 환경에 의존하지 않으려고 줄은 유지한다
 - 실습 지시서 6-3은 "import 5개"라고 하지만 원본 `HelloServlet`은 `java.io.IOException`까지 6개다
-- `?name=<b>굵게</b>`가 HTML로 그대로 출력된다 (XSS). STEP 6에서 `<c:out>`으로 다룬다
+- `?name=<b>굵게</b>`가 HTML로 그대로 출력된다 (XSS). STEP 5(EL/JSTL)에서 `<c:out>`으로 다룬다
 - 복습 중 실수 두 가지: `setCharacterEncoding("charset=UTF-8")`는 인코딩 이름이 아니라 헤더 형태라 POST가 500(`UnsupportedEncodingException`)이 났다 / `isEmpty()`는 공백뿐인 값을 못 걸러 `isBlank()`로 바꿨다
 - `main.js`가 빈 이름 제출을 막으므로, 서버의 빈 값 처리는 주소창(`/hello?name=`)으로 확인한다
 - 사용자가 헷갈렸던 것: 버튼은 같은 `<form>` 안의 입력만 제출한다 / `width` 속성은 텍스트 input에 안 먹는다 (`style="width: ..."`) / 요청 인코딩(`req`)과 응답 인코딩(`resp`)은 방향이 다르다 / `label for`는 `name`이 아니라 `id`와 짝이다 / 예외는 `throws ServletException, IOException` (Ctrl+O로 생성하면 자동)
@@ -65,20 +65,32 @@ STEP 2 미션 문서는 `missions/STEP02_JSP_입력과_결과.md`. 작업 순서
 
 ## 3. 로드맵
 
-| STEP | 프로젝트 | 미션 | 원본 |
-|---|---|---|---|
-| 1 | `study_project` | 인사 서블릿 — `HelloServlet`, `GreetServlet`, `index.html` | `06_01` |
-| 2 | `study_project` | JSP 입력·결과 — `input.jsp` → `result.jsp` | `06_02` |
-| 3 | `study_project` | JSP만으로 로그인 — `login.jsp` → `log.jsp` (session) | `06_02` |
-| 4 | `study_project` | MVC 메모리 게시판 — `BoardPost`, `BoardDao`, `BoardServlet`, `list.jsp` | `06_03` |
-| 5 | **`study_project_jdbc`** (새 프로젝트) | MySQL JDBC 게시판 — Service·DAO 계층 | `06_03/custom_project_jdbc` |
-| 6 | `study_project` | `list.jsp`를 EL/JSTL로 전환 | `06_04` |
-| 7 | `study_project` | 서블릿 로그인, 권한별 메뉴, 서버 측 통제 | `06_04` 지시서 |
-| 8 | `study_project` | 오류 페이지와 경계 진단 | `06_04` 지시서 |
+**최종 목표 (2026-10-13 사용자): 로그인, 게시판, 댓글을 직접 구현한다.**
+forward와 redirect는 "확실하게, 그러나 이상한 데 끼워 넣어 어렵게 배우지 않게" 한다. 그래서 STEP 3 한 곳에서 따로 떼어 배우고, 뒤 STEP에서 원래 강의 흐름대로 다시 쓴다.
+
+| STEP | 프로젝트 | 미션 (작업 순서) | 원본 | forward / redirect |
+|---|---|---|---|---|
+| 1 | `study_project` | 인사 서블릿 — `index.html` → `HelloServlet` → `GreetServlet` | `06_01` | 없다 |
+| 2 | `study_project` | JSP 입력·결과 — `input.jsp` → `result.jsp` | `06_02` 5·6교시 | 없다 (폼이 JSP로 직접 POST) |
+| 3 | `study_project` | **session과 페이지 이동** — `session_check.jsp` → `scope_view.jsp` → `go_forward.jsp` → `go_redirect.jsp` | `06_02` 4·7·8교시 | **처음 배운다.** 마지막 한 줄만 다른 두 파일로 요청 수, 주소창, request·session 속성, 302와 `Location`을 예측한 뒤 관측한다 |
+| 4 | `study_project` | MVC 메모리 게시판 (목록·등록) — `BoardPost` → `BoardDao` → `BoardServlet` → `WEB-INF/views/list.jsp` | `06_03` 1·2·4·5·7·8교시 | 적용 ①: 목록은 `WEB-INF` JSP로 forward, 등록은 PRG. 새로고침 중복 실험 |
+| 5 | `study_project` | `list.jsp`를 EL/JSTL로 전환 | `06_04` 1·2·5교시 | (EL의 scope 탐색 순서) |
+| 6 | `study_project` | 로그인·로그아웃, 권한별 메뉴, 서버 측 통제 | `06_04` 3·4·6·7교시 | 적용 ②: 로그인 실패는 forward(오류 문구 보존), 성공·로그아웃은 redirect, 미인증 접근은 로그인 화면으로 redirect |
+| 7 | `study_project` | 오류 페이지와 경계 진단 | `06_04` 8교시 | (`sendError`와 오류 페이지) |
+| 8 | `study_project` | 게시판 CRUD 완성 — 상세 → 등록 검증 → 수정 → 삭제, 로그인 연동(작성자 = 세션 사용자) | `06_05` | 적용 ③: 검증 실패는 forward, 등록·수정·삭제 성공은 PRG, 없는 글은 `sendError` 또는 오류 화면 forward |
+| 9 | `study_project` | **댓글** — 상세 화면에 목록·작성 폼, 로그인 사용자만 작성, 본인만 삭제 | **과정 밖 확장** (`06_05` 패턴 응용) | 응용: 등록·삭제 뒤 상세(`?id=`)로 PRG |
+| 10 | `study_project` (구조를 뒤엎게 되면 그때 새 프로젝트 여부를 묻는다) | JDBC 교체 — 메모리 DAO를 DB DAO로 (게시글·사용자·댓글) | `06_03` 3·6교시, `06_03/custom_project_jdbc`, `06_05` 4-2의 6단계 | 없다 (Controller는 그대로 둔다) |
 
 - 원본과 **클래스 이름·패키지(`com.kyobo.web`)·URL·파일 위치를 거의 같게** 맞춰 한 프로젝트에 쌓는다
-- 구조를 뒤엎어야 할 때만(STEP 5) 원본을 본뜬 새 프로젝트를 만든다. 이 저장소 안에 하위 폴더로 둘지, 별도 저장소로 둘지는 그때 사용자에게 묻는다
-- 미션 문서는 `missions/STEPNN_*.md`로 **한 단계씩** 추가한다
+- 미션 문서는 `missions/STEPNN_*.md`로 **한 단계씩** 추가한다. 위 표는 범위만 정한 것이다
+
+### 로드맵 근거 (2026-10-13 재설계)
+- **forward·redirect를 STEP 3에서 따로 배우는 이유** — 강의 `lecture/daily/06_02_JSP.pdf`가 scope(25~29장) 바로 뒤 30~38장에서 페이지 이동 → forward → redirect → 주소 변화 → 요청 유지 → 새 요청 → 비교 → 이동 오류 → 이동 점검 순서로 개념을 가르친다. 강사 실습 지시서도 4교시 종이 설계 → 7교시 `session_check.jsp` → 8교시 `scope_view.jsp` → `go_forward.jsp` → `go_redirect.jsp`로 직접 만들게 한다. 서블릿이 필요 없고 STEP 2의 `loginName`을 그대로 이어 쓴다. 주소창이 실제로 바뀌는 것을 볼 수 있는 곳은 여기뿐이다 (게시판 PRG는 같은 주소로 돌아와서 주소 변화가 안 보인다)
+- **같은 판단을 뒤에서 반복한다** — `06_03`(목록 forward, 등록 PRG), `06_04`(로그인 실패 forward, 성공·로그아웃 redirect), `06_05`(검증 실패 forward, 수정·삭제 PRG, 비로그인 접근 redirect; 슬라이드 33~36·41~44·53~54장)가 모두 "forward냐 redirect냐"를 다룬다. 새 실습을 끼워 넣지 않고 원래 흐름에서 네 번 더 쓴다
+- **옛 STEP 3 "JSP만으로 로그인(`login.jsp` → `log.jsp`)"을 뺐다** — `06_02` 지시서 8개 어디에도 두 파일이 나오지 않고(검색 0건), 파일 시각이 수업 중(10-07 16:26~17:18, 배포본은 10-06 13:00)이며 `log.jsp` 본문이 비어 있다. 수업 중에 만든 연습 파일로 판단했다. 로그인은 STEP 6에서 `06_04` 기준으로 제대로 만든다
+- **JDBC를 맨 뒤(STEP 10)로 옮겼다** — `06_04`·`06_05` 강사 소스는 모두 메모리 DAO(`custom_project`)에서 이어지고, `06_05` 4-2는 "JDBC 교체"를 CRUD의 마지막 단계로 둔다. 로그인·게시판·댓글을 메모리 DAO로 먼저 완성하고, 교체할 때 Controller를 건드리지 않는 것을 확인한다
+- **댓글은 과정에 없다** — 지시서·소스·SQL 검색 0건, `06_05` 슬라이드 72장 중 확인한 24장(1~4, 17~20, 33~36, 41~44, 53~56, 69~72)에도 없다. 게시글 상세에 붙는 하위 자원으로, `06_05`의 패턴(검증 실패 forward, 성공 PRG, 작성자 = 세션 사용자)을 그대로 응용한다
+- **실측 (2026-10-13, Tomcat 11.0.26, 포트 8082, curl)** — forward: 200, 주소 그대로, 리다이렉트 0회, `notice`·`loginName` 둘 다 보인다 / redirect: `302` + `Location: scope_view.jsp`(상대 경로), 따라간 뒤 `notice=null`·`loginName=Kim`, 쿠키 없이 따라가면 둘 다 `null` / PRG: 등록 POST 뒤 마지막 요청이 GET이라 그 요청을 다시 보내도 글 수가 1→1→1 / 등록 뒤 forward: 마지막 요청이 POST라 다시 보내면 2→3→4로 늘어난다 / 검증 실패를 같은 요청 안에서 보여 주면 오류 문구가 남고, redirect하면 `null`이 된다. 새로고침은 "마지막 요청을 다시 보내기"로 흉내 냈다. 브라우저 화면은 보지 않았다
 
 ---
 
@@ -102,7 +114,7 @@ STEP 2 미션 문서는 `missions/STEP02_JSP_입력과_결과.md`. 작업 순서
 - 플러그인 `java`, `war` / `group = 'com.kyobo'`, `version = '1.0-SNAPSHOT'`
 - **toolchain이 Java 21로 고정**돼 있다 → 기기에 JDK 21이 없으면 Gradle이 실패한다
 - `compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'` (Tomcat이 실행 시 제공)
-- JSTL 두 줄은 주석 (STEP 6에서 푼다), MySQL 드라이버는 주석 (STEP 5)
+- JSTL 두 줄은 주석 (STEP 5에서 푼다), MySQL 드라이버는 주석 (STEP 10)
 - 서블릿 API는 `jakarta.*`다. `javax.*`는 Tomcat 10 이상에서 동작하지 않는다
 
 ---
@@ -125,6 +137,7 @@ STEP 2 미션 문서는 `missions/STEP02_JSP_입력과_결과.md`. 작업 순서
 - 원래 PC에서는 이 프로젝트의 **한 단계 위**(`../practice/`)에 있었다. 새 기기에서 그 경로가 없으면 **사용자에게 과정 폴더 위치를 묻는다**
 - 실습 지시서와 원본 코드를 읽고, 원본과 거의 같은 결과가 나오도록 명세를 쓴다. 필요한 함수는 표로 준다
 - **미션 문서의 "만들 파일" 표와 명세는 작업 순서대로 쓴다.** 번호를 매기고, 앞 단계가 뒤 단계의 계약(파라미터 키, 속성 이름, 메서드 시그니처)을 정하는 방향으로 배열한다. 원본 지시서의 표 순서를 그대로 옮기지 않는다 (1장 '작업 순서')
+- **강의 슬라이드도 근거로 쓴다** — `lecture/daily/06_0N_*.pdf`(일차당 72장, 약 200MB)는 페이지마다 이미지 한 장(2688×1520 RGB, ASCII85+Flate)뿐이라 텍스트가 없고, WSL에 poppler도 없다. Windows 실습 PC의 WSL에서는 `python3 ~/.local/bin/pdfslides.py <pdf> <출력 폴더>`로 페이지를 절반 크기 PNG로 풀어 Read 도구로 본다 (표준 라이브러리만 쓴다, 5개 PDF에 약 50초). 72장을 다 열지 말고 앞쪽 몇 장과 주제가 맞는 구간만 본다
 - **과정 원본(지시서, 강사 코드)은 이 저장소에 복사하지 않는다.** 공개 저장소다
 
 ---
@@ -228,7 +241,7 @@ STEP 2 미션 문서는 `missions/STEP02_JSP_입력과_결과.md`. 작업 순서
 ## 12. 공개 저장소 주의
 
 - 이 저장소는 **Public**이다
-- 비밀번호를 커밋하지 않는다. STEP 5(JDBC)의 DB 비밀번호는 환경 변수나 `.gitignore`된 파일(`*.local.properties`, `.env`)로 뺀다
+- 비밀번호를 커밋하지 않는다. STEP 10(JDBC)의 DB 비밀번호는 환경 변수나 `.gitignore`된 파일(`*.local.properties`, `.env`)로 뺀다
 - `.claude/settings.local.json`은 개인 설정이라 올리지 않는다
 - 과정 원본(지시서, 강사 코드, 강의 PDF)은 올리지 않는다
 

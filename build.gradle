@@ -20,11 +20,11 @@ dependencies {
     // Tomcat 11이 실행 시점에 제공하므로 compileOnly
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
 
-    // STEP 8 (EL/JSTL)에서 주석을 푼다
+    // STEP 5 (EL/JSTL)에서 주석을 푼다
     // implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.1'
     // implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
-    // STEP 7 (JDBC)에서 주석을 푼다
+    // STEP 10 (JDBC 교체)에서 주석을 푼다
     // implementation 'com.mysql:mysql-connector-j:9.5.0'
 }
 

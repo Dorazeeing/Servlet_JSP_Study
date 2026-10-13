@@ -28,6 +28,6 @@ Thumbs.db
 *.swp
 *.log
 
-# 비밀번호가 들어갈 수 있는 파일 (STEP 5 JDBC 대비)
+# 비밀번호가 들어갈 수 있는 파일 (STEP 10 JDBC 대비)
 *.local.properties
 .env
