@@ -25,7 +25,7 @@ public class GreetServlet extends HttpServlet {
 			쿼리로 들어오다니!!!<br>
 			히히 오줌 발싸!
 			</h1>
-            """;
+			""";
 
 		String name = req.getParameter("name");
 		String email = req.getParameter("email");
