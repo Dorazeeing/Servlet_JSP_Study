@@ -18,7 +18,7 @@ public class HelloServlet extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
         String name = req.getParameter("name");
 
-        if(name == null || name.isEmpty()){
+        if(name == null || name.isBlank()){
             name = new String("Servlet");
             resp.getWriter().println(brSet + "<marquee style=" + mqCss + ">잘못된 이름!!!</marquee>");
         }
@@ -29,15 +29,12 @@ public class HelloServlet extends HttpServlet {
             resp.getWriter().println("<br>");
             resp.getWriter().println("<marquee style='font-size: 45px'>요청 성공!!</marquee>");
         }
-
-
-
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        super.doPost(req, resp);
-        req.setCharacterEncoding("charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
         this.doGet(req, resp);
     }
 }
