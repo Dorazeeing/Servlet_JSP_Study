@@ -31,21 +31,20 @@ Windows 쪽 Claude의 메모리와 대화 기록은 넘어가지 않는다. **�
 
 ## 2. 북마크 — 지금 어디까지 왔나
 
-**STEP 1 복습 모드.** 통과했던 코드를 지우고 사용자가 백지에서 다시 쓰는 중이다.
-복습 순서: `index.html` 폼 ①② → `HelloServlet`(`/hello`) → `GreetServlet`(`/greet`) + 폼 ③
+**STEP 2 시작 (2026-10-13).** STEP 1 복습(HelloServlet, GreetServlet, 폼 세 개, 질문 5개)을 마쳤다.
+사용자 선택으로 STEP 1의 확인 표(예측→관측), `setCharacterEncoding` 실험, 첫 통과본과의 대조, `notes/` 후속 노트는 **건너뛰었다.** 완료 기준의 해당 칸은 비어 있다.
+STEP 2 미션 문서는 `missions/STEP02_JSP_입력과_결과.md`. 작업 순서는 `input.jsp`(폼, 계약 정하기) → `result.jsp`(키 읽기) → 실행 확인이다.
 
-| 파일 | 2026-10-13 진행 상태 |
+| 파일 | 2026-10-13 상태 |
 |---|---|
-| `src/main/webapp/index.html` | 폼 ①(GET)과 ②(POST)는 작성됨. **두 입력칸의 `id="name"`이 중복**된다고 지적했고 아직 고치지 않음 (폼마다 다른 id, 예: `getName`/`postName`. `name="name"`은 유지). `<!-- TODO -->` 주석이 남아 있음 |
-| `src/main/java/.../controller/HelloServlet.java` | **통과.** doGet·doPost 모두 8081 임시 Tomcat에서 GET/POST/공백/빈 값/한글을 실측 확인함 (예외 0) |
-| `GreetServlet.java` | 아직 없음 |
-| `assets/js/main.js`, `assets/css/style.css` | 유지. `main.js`는 Claude가 작성함(빈 이름이면 `alert` 후 제출 취소) |
+| `HelloServlet.java`, `GreetServlet.java`, `index.html` (폼 3개) | **통과.** 8081 임시 Tomcat에서 GET/POST/빈 값/공백/한글을 실측 확인함 |
+| `input.jsp`, `result.jsp` | **아직 없음.** 사용자가 `src/main/webapp/` 바로 아래에 만든다 |
 
 다음 순서:
-1. `index.html`의 id 중복과 TODO 주석을 고치게 한다
-2. 폼 ③(`index.html`) → `GreetServlet` 순서로 쓴다 (폼의 `name`·`email` 키가 계약이라 먼저 확정한다). 명세는 `missions/STEP01_인사_서블릿.md`의 1-3. **방식 A**(HelloServlet을 닫고 백지에서 작성)
-3. STEP 1 확인 표와 리뷰 질문 5개(미션 문서 하단), `notes/` 정리
-4. STEP 2 미션 문서를 만든다 (6장)
+1. 사용자가 "뭐 해야 해?"라고 물으면 `missions/STEP02_...md`를 읽고 **2-1(`input.jsp`) 하나만** 안내한다
+2. `input.jsp`를 리뷰한 뒤 2-2(`result.jsp`). 요청하면 메서드는 나열만 한다
+3. 서버를 실행해 확인 표와 질문 5개, 그다음 심화 ①②③을 하나씩
+4. "STEP 2 끝"이면 STEP 3(세션 로그인) 미션 문서를 만든다 (6장)
 
 ### 통과본 (리뷰 비교 기준)
 `.claude/baseline/step01/`에 첫 시도에서 통과한 `HelloServlet.java.txt`, `index.html.txt`가 있다.
