@@ -38,13 +38,16 @@ STEP 2 미션 문서는 `missions/STEP02_JSP_입력과_결과.md`. 작업 순서
 | 파일 | 2026-10-13 상태 |
 |---|---|
 | `HelloServlet.java`, `GreetServlet.java`, `index.html` (폼 3개) | **통과.** 8081 임시 Tomcat에서 GET/POST/빈 값/공백/한글을 실측 확인함 |
-| `input.jsp`, `result.jsp` | **아직 없음.** 사용자가 `src/main/webapp/` 바로 아래에 만든다 |
+| `input.jsp` | **빈 파일(0바이트)만 만들어 둠** (2026-10-13 퇴근 시점). 명세 2-1대로 지시어 한 줄과 폼을 쓸 차례다. 지시어 형식(`<%@ page 속성="값" %>`)만 알려 줬고 값은 명세 표에 있다고 안내했다 |
+| `result.jsp` | 아직 없음 |
 
 다음 순서:
 1. 사용자가 "뭐 해야 해?"라고 물으면 `missions/STEP02_...md`를 읽고 **2-1(`input.jsp`) 하나만** 안내한다
 2. `input.jsp`를 리뷰한 뒤 2-2(`result.jsp`). 요청하면 메서드는 나열만 한다
 3. 서버를 실행해 확인 표와 질문 5개, 그다음 심화 ①②③을 하나씩
 4. "STEP 2 끝"이면 STEP 3(session과 페이지 이동, `06_02` 4·7·8교시) 미션 문서를 만든다 (6장). 로드맵은 2026-10-13에 재설계했다 (3장)
+   - STEP 3 미션 문서를 STEP 2 도중에 미리 만들어 둘지는 사용자에게 물어 두었고 **답을 받지 못했다.** 따로 말이 없으면 규칙대로 STEP 2가 끝난 뒤 만든다
+   - 상위 `Kyobo_DTS/CLAUDE.md`의 "강의 PDF가 열리지 않는다" 문구를 고칠지도 답을 받지 못했다 (Windows PC에는 `pdfslides.py`가 있어 이제 열린다. 맥북에는 없다)
 
 ### 통과본 (리뷰 비교 기준)
 `.claude/baseline/step01/`에 첫 시도에서 통과한 `HelloServlet.java.txt`, `index.html.txt`가 있다.
