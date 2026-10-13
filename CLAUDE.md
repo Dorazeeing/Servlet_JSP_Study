@@ -33,19 +33,18 @@ Windows 쪽 Claude의 메모리와 대화 기록은 넘어가지 않는다. **�
 **STEP 1 복습 모드.** 통과했던 코드를 지우고 사용자가 백지에서 다시 쓰는 중이다.
 복습 순서: `index.html` 폼 ①② → `HelloServlet`(`/hello`) → `GreetServlet`(`/greet`) + 폼 ③
 
-| 파일 | 2026-10-12 퇴근 시점 상태 |
+| 파일 | 2026-10-13 진행 상태 |
 |---|---|
-| `src/main/webapp/index.html` | 폼 ①(GET)과 ②(POST)는 작성됨. **두 입력칸의 `id="name"`이 중복**된다고 지적했고 아직 고치지 않음 (폼마다 다른 id, 예: `getName`/`postName`. `name="name"`은 유지). `<!-- TODO -->` 주석이 남아 있음. `<script src="assets/js/main.js">`는 사용자가 다시 연결함 |
-| `src/main/java/.../controller/HelloServlet.java` | **작성 중이라 컴파일되지 않음.** `doGet`에 `brSet` 한 줄과 미완성 `String `까지 쓰다 멈춤. `doPost`는 비어 있음 |
+| `src/main/webapp/index.html` | 폼 ①(GET)과 ②(POST)는 작성됨. **두 입력칸의 `id="name"`이 중복**된다고 지적했고 아직 고치지 않음 (폼마다 다른 id, 예: `getName`/`postName`. `name="name"`은 유지). `<!-- TODO -->` 주석이 남아 있음 |
+| `src/main/java/.../controller/HelloServlet.java` | **통과.** doGet·doPost 모두 8081 임시 Tomcat에서 GET/POST/공백/빈 값/한글을 실측 확인함 (예외 0) |
 | `GreetServlet.java` | 아직 없음 |
 | `assets/js/main.js`, `assets/css/style.css` | 유지. `main.js`는 Claude가 작성함(빈 이름이면 `alert` 후 제출 취소) |
 
 다음 순서:
-1. `HelloServlet` 완성을 돕는다. 요청하면 메서드는 나열만 한다
-2. `index.html`의 id 중복이 고쳐졌는지 확인한다
-3. `GreetServlet` + 폼 ③ — 명세는 `missions/STEP01_인사_서블릿.md`의 1-3. **방식 A**(HelloServlet을 닫고 백지에서 작성)
-4. STEP 1 확인 표와 리뷰 질문 5개(미션 문서 하단), `notes/` 정리
-5. STEP 2 미션 문서를 만든다 (6장)
+1. `index.html`의 id 중복과 TODO 주석을 고치게 한다
+2. `GreetServlet` + 폼 ③ — 명세는 `missions/STEP01_인사_서블릿.md`의 1-3. **방식 A**(HelloServlet을 닫고 백지에서 작성)
+3. STEP 1 확인 표와 리뷰 질문 5개(미션 문서 하단), `notes/` 정리
+4. STEP 2 미션 문서를 만든다 (6장)
 
 ### 통과본 (리뷰 비교 기준)
 `.claude/baseline/step01/`에 첫 시도에서 통과한 `HelloServlet.java.txt`, `index.html.txt`가 있다.
@@ -58,6 +57,7 @@ Windows 쪽 Claude의 메모리와 대화 기록은 넘어가지 않는다. **�
 - Tomcat 11.0.26에서 `req.setCharacterEncoding("UTF-8")`을 빼도 POST 한글이 깨지지 않았다 (charset 유무 두 경우 모두 실측). 그래도 환경에 의존하지 않으려고 줄은 유지한다
 - 실습 지시서 6-3은 "import 5개"라고 하지만 원본 `HelloServlet`은 `java.io.IOException`까지 6개다
 - `?name=<b>굵게</b>`가 HTML로 그대로 출력된다 (XSS). STEP 6에서 `<c:out>`으로 다룬다
+- 복습 중 실수 두 가지: `setCharacterEncoding("charset=UTF-8")`는 인코딩 이름이 아니라 헤더 형태라 POST가 500(`UnsupportedEncodingException`)이 났다 / `isEmpty()`는 공백뿐인 값을 못 걸러 `isBlank()`로 바꿨다
 - `main.js`가 빈 이름 제출을 막으므로, 서버의 빈 값 처리는 주소창(`/hello?name=`)으로 확인한다
 - 사용자가 헷갈렸던 것: 버튼은 같은 `<form>` 안의 입력만 제출한다 / `width` 속성은 텍스트 input에 안 먹는다 (`style="width: ..."`) / 요청 인코딩(`req`)과 응답 인코딩(`resp`)은 방향이 다르다 / `label for`는 `name`이 아니라 `id`와 짝이다 / 예외는 `throws ServletException, IOException` (Ctrl+O로 생성하면 자동)
 
